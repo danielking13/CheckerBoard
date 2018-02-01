@@ -13,7 +13,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
@@ -29,71 +28,51 @@ public class CheckerFXMLController implements Initializable, Startable {
     private double boardHeight;
     private Color lightColor;
     private Color darkColor;
+    private double offSet;
     
     @FXML 
     private AnchorPane anchor;
     
     @FXML
-    private VBox vb; 
-    
-    @FXML
     private void handleGrid16(ActionEvent event) {
         numRows = 16;
         numCols = 16;
-        
-        CheckerBoard cb = new CheckerBoard(numRows, numCols, boardWidth, boardHeight, lightColor, darkColor);
-        AnchorPane check = cb.getBoard();
-        anchor.getChildren().addAll(check);
-        
+        createBoard();
     }
     
     @FXML
     private void handleGridDefault(ActionEvent event) {
         numRows = 8;
         numCols = 8;
-        
-        CheckerBoard cb = new CheckerBoard(numRows, numCols, boardWidth, boardHeight, lightColor, darkColor);
-        AnchorPane check = cb.getBoard();
-        anchor.getChildren().addAll(check);
+        createBoard();
     }
     
     @FXML
     private void handleGrid10(ActionEvent event) {
         numRows = 10;
         numCols = 10;
-        
-        CheckerBoard cb = new CheckerBoard(numRows, numCols, boardWidth, boardHeight, lightColor, darkColor);
-        AnchorPane check = cb.getBoard();
-        anchor.getChildren().addAll(check);
+        createBoard();
     }
     @FXML
     private void handleGrid3(ActionEvent event) {
         numRows = 3;
         numCols = 3;
-        
-        CheckerBoard cb = new CheckerBoard(numRows, numCols, boardWidth, boardHeight, lightColor, darkColor);
-        AnchorPane check = cb.getBoard();
-        anchor.getChildren().addAll(check);
+        createBoard();
     }
     
     @FXML
     private void handleColorDefault(ActionEvent event) {
         lightColor = Color.RED;
         darkColor = Color.BLACK;
-        
-        CheckerBoard cb = new CheckerBoard(numRows, numCols, boardWidth, boardHeight, lightColor, darkColor);
-        AnchorPane check = cb.getBoard();
-        anchor.getChildren().addAll(check);
+        createBoard();
+            
     }
     
     @FXML
     private void handleColorBlue(ActionEvent event) {
         lightColor = Color.SKYBLUE;
         darkColor = Color.DARKBLUE;
-        
-        CheckerBoard cb = new CheckerBoard(numRows, numCols, boardWidth, boardHeight, lightColor, darkColor);
-        AnchorPane check = cb.getBoard();
-        anchor.getChildren().addAll(check);
+        createBoard();
     }
     
     @Override
@@ -107,24 +86,23 @@ public class CheckerFXMLController implements Initializable, Startable {
         numCols = 8;
         lightColor = Color.RED;
         darkColor = Color.BLACK;
+        offSet = stage.getHeight() - anchor.getHeight();
         
         ChangeListener<Number> lambdaChangeListener = (ObservableValue<? extends Number> observable, Number oldValue, final Number newValue) -> {
-            adaptSize();
-//            System.out.println(anchor.getWidth());
+            createBoard();
         };
+        
         this.stage.widthProperty().addListener(lambdaChangeListener);
         this.stage.heightProperty().addListener(lambdaChangeListener);
-        
-        adaptSize();
+        createBoard();
     }
     
-    private void adaptSize() {
+    private void createBoard() {
         anchor.getChildren().clear();
-        double offSet = 50; //accounts for problems with rectangles getting cut off
         boardWidth = stage.getWidth();
         boardHeight = stage.getHeight() - offSet;
-        CheckerBoard check = new CheckerBoard(numRows, numCols, boardWidth, boardHeight, lightColor, darkColor);
-        AnchorPane board = check.getBoard();
-        anchor.getChildren().add(board);
+        CheckerBoard checkerBoard = new CheckerBoard(numRows, numCols, boardWidth, boardHeight, lightColor, darkColor);
+        AnchorPane ap = checkerBoard.getBoard();
+        anchor.getChildren().add(ap);
     }
 }
